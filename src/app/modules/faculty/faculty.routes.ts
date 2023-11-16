@@ -1,4 +1,6 @@
 import express from 'express';
+import { ENUM_USER_ROLE } from '../../../enums/user';
+import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
 import { courseController } from '../course/course.controller';
 import { facultyController } from './faculty.controller';
@@ -6,13 +8,15 @@ import { facultyValidation } from './faculty.validation';
 
 const router = express.Router();
 
+router.get(
+  '/my-courses',
+  auth(ENUM_USER_ROLE.FACULTY),
+  facultyController.myCourses,
+);
 router.post('/create-faculty/', facultyController.createFaculty);
 // router.get('/', studentController.getAllStudents);
-router.get(
-  '/:id',
+router.get('/:id', facultyController.getSingleFaculty);
 
-  facultyController.getSingleFaculty,
-);
 // router.patch(
 //   '/:id',
 //   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),

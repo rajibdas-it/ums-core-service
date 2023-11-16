@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import { paginationsFields } from '../../../constants/paginations';
 import catchAsync from '../../../shared/catchAsync';
@@ -63,6 +64,17 @@ const deleteStudent = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const myCourses = catchAsync(async (req, res) => {
+  const user = (req as any).user;
+  const filters = pick(req.query, ['courseId', 'academicSemesterId']);
+  const result = await studentService.myCourses(user.id, filters);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'student courses data fetched successfully',
+    data: result,
+  });
+});
 
 export const studentController = {
   createStudent,
@@ -70,4 +82,5 @@ export const studentController = {
   getSingleStudent,
   updateStudent,
   deleteStudent,
+  myCourses,
 };

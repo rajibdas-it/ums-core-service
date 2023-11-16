@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Prisma, Student } from '@prisma/client';
 import calculatePagination from '../../../helper/calculatePagination';
@@ -91,10 +92,41 @@ const deleteStudent = async (id: string): Promise<Student> => {
   return result;
 };
 
+const myCourses = async (
+  authUserId: string,
+  filters: {
+    courseId?: string | undefined;
+    academicSemesterId?: string | undefined;
+  },
+) => {
+  if (!filters.academicSemesterId) {
+    const currentSemester = await prisma.academicSemester.findFirst({
+      where: {
+        isCurrent: true,
+      },
+    });
+    filters.academicSemesterId = currentSemester?.id;
+  }
+
+  const result = await prisma.studentEnrollCourse.findMany({
+    where: {
+      student: {
+        studentId: authUserId,
+      },
+      ...filters,
+    },
+    include: {
+      course: true,
+    },
+  });
+  return result;
+};
+
 export const studentService = {
   createStudent,
   getAllStudents,
   getSingleStudent,
   updateStudent,
   deleteStudent,
+  myCourses,
 };

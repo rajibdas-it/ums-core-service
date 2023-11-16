@@ -8,15 +8,21 @@ import { SemesterRegistrationController } from './semesterRegistration.controlle
 const router = express.Router();
 
 router.get(
+  '/my-registration-courses',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.getMySemesterRegistrationCourses,
+);
+
+router.get(
   '/my-registration',
   auth(ENUM_USER_ROLE.STUDENT),
   SemesterRegistrationController.getMyRegistration,
 );
 router.post(
   '/create-semester-registration',
-  validateRequest(
-    semesterRegistrationValidation.createSemesterRegistrationZodSchema,
-  ),
+  // validateRequest(
+  //   semesterRegistrationValidation.createSemesterRegistrationZodSchema,
+  // ),
   SemesterRegistrationController.createSemesterRegistration,
 );
 router.get('/', SemesterRegistrationController.getAllSemesterRegistration);

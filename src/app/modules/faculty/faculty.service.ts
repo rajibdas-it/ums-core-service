@@ -78,7 +78,61 @@ const getSingleFaculty = async (id: string): Promise<Faculty | null> => {
 //   return result;
 // };
 
+const myCourses = async (
+  authUserId: { role: string; id: string },
+  filter: {
+    academicSemesterId?: string | undefined;
+    courseId?: string | undefined;
+  },
+) => {
+  if (!filter.academicSemesterId) {
+    const currentSemester = await prisma.academicSemester.findFirst({
+      where: { isCurrent: true },
+    });
+    filter.academicSemesterId = currentSemester?.id;
+  }
+
+  const offeredCourseSection = await prisma.offeredCourseSection.findMany({
+    where: {
+      offeredCourseClassSchedules: {
+        some: {
+          faculty: {
+            facultyId: authUserId.id,
+          },
+        },
+      },
+      offeredCourse: {
+        semesterRegistration: {
+          academicSemester: {
+            id: filter.academicSemesterId,
+          },
+        },
+      },
+    },
+    include: {
+      offeredCourse: {
+        include: {
+          course: true,
+        },
+      },
+      offeredCourseClassSchedules: {
+        include: {
+          room: {
+            include: {
+              buildings: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  console.log(offeredCourseSection);
+  // return offeredCourseSection
+};
+
 export const facultyService = {
   createFaculty,
   getSingleFaculty,
+  myCourses,
 };

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { facultyService } from './faculty.service';
 
@@ -37,6 +39,17 @@ const getSingleFaculty = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const myCourses = catchAsync(async (req, res) => {
+  const user = (req as any).user;
+  const filter = pick(req.query, ['courseId', 'academicSemesterId']);
+  const result = await facultyService.myCourses(user, filter);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'my courses data fetched successfully',
+    data: result,
+  });
+});
 
 // const updateStudent = catchAsync(async (req, res) => {
 //   const id = req.params.id;
@@ -64,4 +77,5 @@ const getSingleFaculty = catchAsync(async (req, res) => {
 export const facultyController = {
   createFaculty,
   getSingleFaculty,
+  myCourses,
 };
