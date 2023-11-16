@@ -169,7 +169,10 @@ const updateFinalMarks = async (paylaod: any) => {
       status: StudentErolledCourseStatus.COMPLETED,
     },
   });
-  console.log(updateMarks);
+
+  if (!updateMarks) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to update marks');
+  }
 
   const grades = await prisma.studentEnrollCourse.findMany({
     where: {
@@ -178,8 +181,50 @@ const updateFinalMarks = async (paylaod: any) => {
       },
       status: StudentErolledCourseStatus.COMPLETED,
     },
+    include: {
+      course: true,
+    },
   });
-  console.log(grades);
+  const academicResult =
+    studentEnrollCourseMarkUtils.calculateTotalCGPAandGrade(grades);
+
+  const studentAcademicInfo = await prisma.studentAcademicInfo.findFirst({
+    where: {
+      student: {
+        id: studentId,
+      },
+    },
+  });
+
+  if (studentAcademicInfo) {
+    await prisma.studentAcademicInfo.update({
+      where: {
+        id: studentAcademicInfo.id,
+      },
+      data: {
+        student: {
+          connect: {
+            id: studentId,
+          },
+        },
+        totalCompletedCredit: academicResult.totalCompletedCredit,
+        cgpa: academicResult.cgpa,
+      },
+    });
+  } else {
+    await prisma.studentAcademicInfo.create({
+      data: {
+        student: {
+          connect: {
+            id: studentId,
+          },
+        },
+        totalCompletedCredit: academicResult.totalCompletedCredit,
+        cgpa: academicResult.cgpa,
+      },
+    });
+  }
+  return studentAcademicInfo;
 };
 
 export const studentEnrolledCourseMarkService = {
