@@ -18,6 +18,7 @@ router.get(
   auth(ENUM_USER_ROLE.STUDENT),
   SemesterRegistrationController.getMyRegistration,
 );
+
 router.post(
   '/create-semester-registration',
   // validateRequest(
