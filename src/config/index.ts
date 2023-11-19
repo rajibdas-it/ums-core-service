@@ -19,6 +19,6 @@ export const config = {
   },
   redis: {
     url: process.env.REDIS_URL,
-    expires_in: process.env.REDIS_TIME_EXPIRES_IN,
+    expires_in: process.env.REDIS_TOKEN_EXPIRES_IN,
   },
 };
