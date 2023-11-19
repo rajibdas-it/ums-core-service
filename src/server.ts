@@ -2,6 +2,7 @@ import { Server } from 'http';
 import app from './app';
 import { config } from './config';
 import { errorLogger, infoLogger } from './shared/logger';
+import { RedisClient } from './shared/redis';
 
 let server: Server;
 
@@ -11,6 +12,7 @@ let server: Server;
 // });
 
 async function dbConnect() {
+  await RedisClient.connect();
   server = app.listen(config.port, () => {
     infoLogger.info(`Server Running On Port ${config.port}`);
   });

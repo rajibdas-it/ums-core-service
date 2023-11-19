@@ -17,4 +17,8 @@ export const config = {
     refresh_token: process.env.REFRESH_TOKEN,
     refresh_token_expires_in: process.env.REFRESH_TOKEN_EXPIRES_IN,
   },
+  redis: {
+    url: process.env.REDIS_URL,
+    expires_in: process.env.REDIS_TIME_EXPIRES_IN,
+  },
 };
