@@ -1,17 +1,51 @@
 import { AcademicSemester, Prisma } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import calculatePagination from '../../../helper/calculatePagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
-import { academicSemesterSearchableFields } from './academicSemester.constant';
+import { RedisClient } from '../../../shared/redis';
+import {
+  Event_Academic_Semester_Created,
+  academicSemesterMapper,
+  academicSemesterSearchableFields,
+} from './academicSemester.constant';
 import { IFilters } from './academicSemester.interface';
 
 const createAcademicSemester = async (
   data: AcademicSemester,
 ): Promise<AcademicSemester | null> => {
+  if (academicSemesterMapper[data.title] !== data.code) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'semester title and code not matched',
+    );
+  }
+
+  const isExisting = await prisma.academicSemester.findFirst({
+    where: {
+      title: data.title,
+      code: data.code,
+      year: data.year,
+    },
+  });
+
+  if (isExisting) {
+    throw new ApiError(httpStatus.CONFLICT, 'Already exist');
+  }
+
   const result = await prisma.academicSemester.create({
     data,
   });
+
+  if (result) {
+    await RedisClient.publish(
+      Event_Academic_Semester_Created,
+      JSON.stringify(result),
+    );
+  }
+
   return result;
 };
 

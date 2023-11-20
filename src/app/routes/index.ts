@@ -16,32 +16,32 @@ import { studentEnrollCourseMarkRoutes } from '../modules/studentEnrolledCourseM
 const router = express.Router();
 
 const routes = [
-  { pathName: '/academic-semester/', routeName: academicRoutes },
-  { pathName: '/academic-faculty/', routeName: academicFacultyRoutes },
-  { pathName: '/academic-department/', routeName: academicDepartmentRoutes },
-  { pathName: '/students/', routeName: studentRoutes },
-  { pathName: '/faculties/', routeName: facultiesRoute },
-  { pathName: '/buildings/', routeName: buildingRoutes },
-  { pathName: '/rooms/', routeName: roomsRoute },
-  { pathName: '/courses/', routeName: courseRoutes },
+  { pathName: '/academic-semester', routeName: academicRoutes },
+  { pathName: '/academic-faculty', routeName: academicFacultyRoutes },
+  { pathName: '/academic-department', routeName: academicDepartmentRoutes },
+  { pathName: '/students', routeName: studentRoutes },
+  { pathName: '/faculties', routeName: facultiesRoute },
+  { pathName: '/buildings', routeName: buildingRoutes },
+  { pathName: '/rooms', routeName: roomsRoute },
+  { pathName: '/courses', routeName: courseRoutes },
   {
-    pathName: '/semester-registration/',
+    pathName: '/semester-registration',
     routeName: semesterRegistrationRoutes,
   },
   {
-    pathName: '/offered-course/',
+    pathName: '/offered-course',
     routeName: offeredCourseRoutes,
   },
   {
-    pathName: '/offered-course-section/',
+    pathName: '/offered-course-section',
     routeName: offeredCourseSectionRoutes,
   },
   {
-    pathName: '/class-schedule/',
+    pathName: '/class-schedule',
     routeName: classScheduleRoutes,
   },
   {
-    pathName: '/student-enrolled-marks/',
+    pathName: '/student-enrolled-marks',
     routeName: studentEnrollCourseMarkRoutes,
   },
 ];
