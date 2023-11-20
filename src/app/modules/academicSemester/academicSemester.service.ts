@@ -116,6 +116,17 @@ const updateAcademicSemester = async (
   id: string,
   data: Partial<AcademicSemester>,
 ): Promise<AcademicSemester | null> => {
+  if (
+    data.title &&
+    data.code &&
+    academicSemesterMapper[data.title] !== data.code
+  ) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'semester title and code not matched',
+    );
+  }
+
   const result = await prisma.academicSemester.update({
     where: { id },
     data,
