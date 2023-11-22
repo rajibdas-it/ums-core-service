@@ -8,6 +8,8 @@ import prisma from '../../../shared/prisma';
 import { RedisClient } from '../../../shared/redis';
 import {
   Event_Academic_Semester_Created,
+  Event_Academic_Semester_Deleted,
+  Event_Academic_Semester_Updated,
   academicSemesterMapper,
   academicSemesterSearchableFields,
 } from './academicSemester.constant';
@@ -131,14 +133,28 @@ const updateAcademicSemester = async (
     where: { id },
     data,
   });
+
+  if (result) {
+    await RedisClient.publish(
+      Event_Academic_Semester_Updated,
+      JSON.stringify(result),
+    );
+  }
   return result;
 };
+
 const deleteAcademicSemester = async (
   id: string,
 ): Promise<AcademicSemester | null> => {
   const result = await prisma.academicSemester.delete({
     where: { id },
   });
+  if (result) {
+    RedisClient.publish(
+      Event_Academic_Semester_Deleted,
+      JSON.stringify(result),
+    );
+  }
   return result;
 };
 

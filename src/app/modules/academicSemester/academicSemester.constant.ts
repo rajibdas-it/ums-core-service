@@ -33,3 +33,5 @@ export const academicSemesterTitles: string[] = ['Autumn', 'Summer', 'Fall'];
 export const academicSemesterCodes: string[] = ['01', '02', '03'];
 
 export const Event_Academic_Semester_Created = 'academicSemester.created';
+export const Event_Academic_Semester_Updated = 'academicSemester.updated';
+export const Event_Academic_Semester_Deleted = 'academicSemester.deleted';
