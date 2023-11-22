@@ -230,7 +230,7 @@ const createStudentFromEvent = async (e: any) => {
     academicFacultyId: e?.academicFaculty?.syncId,
     academicDepartmentId: e?.academicDepartment?.syncId,
   };
-  console.log('studentData for save', studentData);
+  // console.log('studentData for save', studentData);
   await createStudent(studentData as Student);
 };
 
