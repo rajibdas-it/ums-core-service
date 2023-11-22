@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Prisma, Student, StudentErolledCourseStatus } from '@prisma/client';
@@ -214,6 +215,25 @@ const myAcademicInfo = async (authUserId: string) => {
   return { academicInfo, courses: groupByAcademicSemesterData };
 };
 
+const createStudentFromEvent = async (e: any) => {
+  const studentData: Partial<Student> = {
+    studentId: e.id,
+    firstName: e.name.firstName,
+    middleName: e.name.middleName,
+    lastName: e.name.lastName,
+    email: e.email,
+    contactNo: e.contactNo,
+    profileImage: e.profileImage,
+    bloodGroup: e.bloodGroup,
+    gender: e.gender,
+    academicSemesterId: e?.academicSemester?.syncId,
+    academicFacultyId: e?.academicFaculty?.syncId,
+    academicDepartmentId: e?.academicDepartment?.syncId,
+  };
+  console.log('studentData for save', studentData);
+  await createStudent(studentData as Student);
+};
+
 export const studentService = {
   createStudent,
   getAllStudents,
@@ -223,4 +243,5 @@ export const studentService = {
   myCourses,
   getMyCourseSchedules,
   myAcademicInfo,
+  createStudentFromEvent,
 };
